@@ -1349,8 +1349,15 @@ short init_g_ChrNameAndSizeAndIndex(std::string RefIndexFileName) {
     std::ifstream RefIndexInput(RefIndexFileName.c_str());
     if (!RefIndexInput) return 1;
     short ChrCount = 0;
-    while (RefIndexInput >> OneChr.ChrName >> OneChr.ChrSize) {
+
+    std::vector<string> fields;
+    std::vector<string> nameFields;
+    while (!RefIndexInput.eof()) {
         getline(RefIndexInput, TempStr);
+        split(fields, TempStr, "\t");
+        split(nameFields, fields[0], " ");
+        OneChr.ChrName = nameFields[0];
+        OneChr.ChrSize = atoi(fields[1].c_str());
         OneChr.ChrIndex = ChrCount;
         ChrCount++;
         g_ChrNameAndSizeAndIndex.push_back(OneChr);
